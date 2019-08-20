@@ -6,3 +6,10 @@
 }
 
 <h2>@Model.Name</h2>
+<ul>
+	<li>Memmbership Type: @Model.MembershipType.Name</li>
+	@if(Model.Birthdate.ToString() != "01-01-1900 00:00:00")
+	{
+		<li>Birthdate: @Model.Birthdate.Value.ToShortDateString()</li>
+	}
+</ul>

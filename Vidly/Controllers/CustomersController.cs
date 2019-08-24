@@ -7,7 +7,8 @@ using Vidly.ViewModels;
 
 namespace Vidly.Controllers
 {
-	public class CustomersController : Controller
+    [Authorize]
+    public class CustomersController : Controller
 	{
 		private MyDBContext _context;
 

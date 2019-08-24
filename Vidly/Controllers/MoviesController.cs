@@ -10,6 +10,7 @@ using System.Data.Entity.Validation;
 
 namespace Vidly.Controllers
 {
+        [Authorize]
 		public class MoviesController : Controller
 		{
 

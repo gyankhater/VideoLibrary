@@ -7,6 +7,7 @@ using System.Web.Http;
 using AutoMapper;
 using Vidly.Models;
 using Vidly.Dtos;
+using System.Data.Entity;
 
 namespace Vidly.Controllers.Api
 {
@@ -19,9 +20,14 @@ namespace Vidly.Controllers.Api
 			_context = new MyDBContext();
 		}
 
-		public IEnumerable<MovieDto> GetMovies()
+		public IHttpActionResult GetMovies()
 		{
-			return _context.Movies.ToList().Select(Mapper.Map<Movie, MovieDto>);			
+            var movieDto = _context.Movies
+                .Include(g => g.Genre)
+                .ToList()
+                .Select(Mapper.Map<Movie, MovieDto>);
+
+            return Ok(movieDto);
 		}
 
 		//GET /api/customers/1
@@ -77,10 +83,7 @@ namespace Vidly.Controllers.Api
 				throw new HttpResponseException(HttpStatusCode.NotFound);
 
 			_context.Movies.Remove(movieInDb);
-			_context.SaveChanges();
-
-
-
+			_context.SaveChanges();            
 		}
 
 	}

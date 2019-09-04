@@ -1,13 +1,22 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace WebApplication1.Models
+namespace Vidly.Models
 {
     public class ExternalLoginConfirmationViewModel
     {
         [Required]
         [Display(Name = "Email")]
         public string Email { get; set; }
+
+        [Required]
+        [Display(Name = "Driving License")]
+        public string DrivingLicense { get; set; }
+
+        [Required]
+        [Display(Name = "Phone No")]
+        [StringLength(50, ErrorMessage = "Max Length is 50")]
+        public string PhoneNo { get; set; }
     }
 
     public class ExternalLoginListViewModel
@@ -79,6 +88,16 @@ namespace WebApplication1.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        [Required]
+        [StringLength(255, ErrorMessage = "The {0} must be at least {2} characters long.")]
+        [Display(Name = "Driving License")]
+        public string DrivingLicense { get; set; }
+
+        [Required]
+        [StringLength(50, ErrorMessage = "Max Length is {0}.")]
+        [Display(Name = "Phone No")]
+        public string PhoneNo { get; set; }
     }
 
     public class ResetPasswordViewModel

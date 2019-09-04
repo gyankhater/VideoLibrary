@@ -11,6 +11,7 @@ using System.Data.Entity;
 
 namespace Vidly.Controllers.Api
 {
+        [Authorize]
 		public class MoviesController : ApiController
 		{
 			private MyDBContext _context;
@@ -20,18 +21,25 @@ namespace Vidly.Controllers.Api
 			_context = new MyDBContext();
 		}
 
-		public IHttpActionResult GetMovies()
+		public IHttpActionResult GetMovies(string query = null)
 		{
-            var movieDto = _context.Movies
+            var moviesQuery = _context.Movies
                 .Include(g => g.Genre)
+                .Where(g => g.NumberAvailable > 0);
+
+            if (!String.IsNullOrWhiteSpace(query))
+                moviesQuery = moviesQuery.Where(m => m.Name.Contains(query));
+
+            var movieDto = moviesQuery
                 .ToList()
                 .Select(Mapper.Map<Movie, MovieDto>);
 
             return Ok(movieDto);
 		}
 
-		//GET /api/customers/1
-		public IHttpActionResult GetMovie(int Id)
+        //GET /api/customers/1
+        [Authorize(Roles = RoleName.CanManageMovies)]
+        public IHttpActionResult GetMovie(int Id)
 		{
 			var movie = _context.Movies.SingleOrDefault(c => c.Id == Id);
 			if (movie == null)
@@ -41,7 +49,8 @@ namespace Vidly.Controllers.Api
 		}
 
 		[HttpPost]
-		public IHttpActionResult CreateMovie(MovieDto movieDto)
+        [Authorize(Roles = RoleName.CanManageMovies)]
+        public IHttpActionResult CreateMovie(MovieDto movieDto)
 
 		{
 			if (!ModelState.IsValid)
@@ -59,7 +68,8 @@ namespace Vidly.Controllers.Api
 		}
 
 		[HttpPut]
-		public void UpdateMovie(int Id, MovieDto movieDto)
+        [Authorize(Roles = RoleName.CanManageMovies)]
+        public void UpdateMovie(int Id, MovieDto movieDto)
 		{
 			if (!ModelState.IsValid)
 				throw new HttpResponseException(HttpStatusCode.BadRequest);
@@ -75,7 +85,8 @@ namespace Vidly.Controllers.Api
 
 
 		[HttpDelete]
-		public void DeleteMovie(int Id)
+        [Authorize(Roles = RoleName.CanManageMovies)]
+        public void DeleteMovie(int Id)
 		{
 			var movieInDb = _context.Movies.SingleOrDefault(m => m.Id == Id);
 
